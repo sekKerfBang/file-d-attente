@@ -1,0 +1,399 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # REVERSE PROXY & SSL
+  # ==========================================
+  traefik:
+    image: traefik:v3.0
+    container_name: clinic-traefik
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@clinique.fr"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--ping=true"
+      - "--metrics.prometheus=true"
+      - "--accesslog=true"
+      - "--log.level=INFO"
+      - "--serverstransport.insecureskipverify=true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt:/letsencrypt
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`monitor.clinique.fr`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.traefik.middlewares=auth@file"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$$apr1$$H6uskkkW$$IgXLP6ewTrSuBkTrqE8wj/"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ==========================================
+  # DATABASE PostgreSQL 16
+  # ==========================================
+  db:
+    image: postgres:16.2-alpine
+    container_name: clinic-db
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_DB: ${DB_NAME:-clinic_db}
+      POSTGRES_USER: ${DB_USER:-clinic_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    command: >
+      postgres 
+      -c max_connections=200
+      -c shared_buffers=256MB
+      -c effective_cache_size=768MB
+      -c maintenance_work_mem=64MB
+      -c checkpoint_completion_target=0.9
+      -c wal_buffers=16MB
+      -c default_statistics_target=100
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
+      -c work_mem=1310kB
+      -c min_wal_size=1GB
+      -c max_wal_size=4GB
+      -c shared_preload_libraries=pg_stat_statements
+      -c pg_stat_statements.track=all
+      -c log_statement=mod
+      -c log_duration=on
+    networks:
+      - clinic-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-clinic_user} -d ${DB_NAME:-clinic_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    labels:
+      - "traefik.enable=false"
+
+  # ==========================================
+  # REDIS Cache & WebSocket
+  # ==========================================
+  redis:
+    image: redis:7.2-alpine
+    container_name: clinic-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --save 60 10000
+    volumes:
+      - redis_data:/data
+    networks:
+      - clinic-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    labels:
+      - "traefik.enable=false"
+
+  # ==========================================
+  # BACKEND Django 6.0
+  # ==========================================
+  backend:
+    build:
+      context: ./backend-django6
+      dockerfile: Dockerfile
+      args:
+        PYTHON_VERSION: 3.12
+    container_name: clinic-backend
+    restart: unless-stopped
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:?SECRET_KEY required}
+      - DB_NAME=${DB_NAME:-clinic_db}
+      - DB_USER=${DB_USER:-clinic_user}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}     
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ALLOWED_HOSTS=clinique.fr,www.clinique.fr,api.clinique.fr,localhost
+      - CORS_ALLOWED_ORIGINS=https://clinique.fr,https://www.clinique.fr
+      - SENTRY_DSN=${SENTRY_DSN:-}
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.clinique.fr`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.path=/api/health/"
+      - "traefik.http.services.backend.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.middlewares.backend-compress.compress=true"
+      - "traefik.http.middlewares.backend-rate-limit.ratelimit.average=100"
+      - "traefik.http.middlewares.backend-rate-limit.ratelimit.burst=50"
+      - "traefik.http.routers.backend.middlewares=backend-compress,backend-rate-limit"
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  # ==========================================
+  # FRONTEND React (Node 20.20.0)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend-react
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: 20.20.0
+        VITE_API_URL: https://api.clinique.fr/api
+        VITE_WS_URL: wss://api.clinique.fr/ws
+    container_name: clinic-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`clinique.fr`) || Host(`www.clinique.fr`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.frontend-security.headers.customFrameOptionsValue=SAMEORIGIN"
+      - "traefik.http.middlewares.frontend-security.headers.contentTypeOptions=true
+      - "traefik.http.middlewares.frontend-security.headers.browserXssFilter=true
+      - "traefik.http.middlewares.frontend-security.headers.referrerPolicy=strict-origin-when-cross-origin"
+      - "traefik.http.middlewares.frontend-cache.headers.customResponseHeaders.Cache-Control=public, max-age=31536000, immutable"
+      - "traefik.http.routers.frontend.middlewares=frontend-security"
+
+  # ==========================================
+  # WORKERS Celery
+  # ==========================================
+  celery-worker:
+    build:
+      context: ./backend-django6
+      dockerfile: Dockerfile
+    container_name: clinic-worker
+    restart: unless-stopped
+    command: celery -A config worker -l info --concurrency=4 --prefetch-multiplier=1
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - REDIS_HOST=redis
+      - SENTRY_DSN=${SENTRY_DSN}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - clinic-network
+    deploy:
+      replicas: 2
+
+  celery-beat:
+    build:
+      context: ./backend-django6
+      dockerfile: Dockerfile
+    container_name: clinic-beat
+    restart: unless-stopped
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - REDIS_HOST=redis
+    depends_on:
+      - db
+      - redis
+    networks:
+      - clinic-network
+
+  # ==========================================
+  # MONITORING Prometheus
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:v2.50.0
+    container_name: clinic-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/rules:/etc/prometheus/rules:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+      - '--web.enable-admin-api'
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=false"
+
+  # ==========================================
+  # GRAFANA Dashboards
+  # ==========================================
+  grafana:
+    image: grafana/grafana:10.3.0
+    container_name: clinic-grafana
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./monitoring/grafana/notifiers:/etc/grafana/provisioning/notifiers:ro
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_password
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_ROOT_URL=https://grafana.clinique.fr
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_DISABLE_GRAVATAR=true
+      - GF_SECURITY_ANGULAR_SUPPORT_ENABLED=false
+      - GF_UNIFIED_ALERTING_ENABLED=true
+    secrets:
+      - grafana_password
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.clinique.fr`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+
+  # ==========================================
+  # LOGGING Loki
+  # ==========================================
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: clinic-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./monitoring/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - loki_data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=false"
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: clinic-promtail
+    restart: unless-stopped
+    volumes:
+      - /var/log:/var/log:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=false"
+
+  # ==========================================
+  # BACKUP Automatique
+  # ==========================================
+  backup:
+    image: offen/docker-volume-backup:v2.37
+    container_name: clinic-backup
+    restart: unless-stopped
+    environment:
+      BACKUP_CRON_EXPRESSION: "0 2 * * *"
+      BACKUP_RETENTION_DAYS: "30"
+      BACKUP_FILENAME: backup-%Y-%m-%dT%H-%M-%S.tar.gz
+      BACKUP_ARCHIVE: "/archive"
+      BACKUP_STOP_CONTAINER_LABEL: clinic.stop-during-backup
+      BACKUP_FROM_SNAPSHOT: "true"
+      AWS_S3_BUCKET_NAME: ${AWS_BACKUP_BUCKET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_KEY}
+      AWS_S3_ENDPOINT: s3.amazonaws.com
+      AWS_S3_REGION: ${AWS_REGION:-eu-west-3}
+      NOTIFICATION_URLS: ${BACKUP_NOTIFICATION_URL}
+      NOTIFICATION_LEVEL: error
+    volumes:
+      - postgres_data:/backup/db:ro
+      - redis_data:/backup/redis:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - clinic-network
+    labels:
+      - "traefik.enable=false"
+      - "clinic.stop-during-backup=true"
+
+# ==========================================
+# NETWORKS & VOLUMES
+# ==========================================
+networks:
+  clinic-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  letsencrypt:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  loki_data:
+    driver: local
+
+secrets:
+  grafana_password:
+    file: ./secrets/grafana_password.txt

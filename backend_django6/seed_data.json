@@ -1,0 +1,802 @@
+{
+  "doctors": [
+    {
+      "id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "first_name": "Marie",
+      "last_name": "Bernard",
+      "specialty": "cardio",
+      "room_number": "B202",
+      "is_active": true,
+      "current_patient_id": "3888d792-fdfa-490b-b34d-69f25b42fdbc"
+    },
+    {
+      "id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "first_name": "Pierre",
+      "last_name": "Dubois",
+      "specialty": "pedia",
+      "room_number": "C303",
+      "is_active": true,
+      "current_patient_id": "8c2c6a29-e5d0-47b6-9bc1-2bd69324cb26"
+    },
+    {
+      "id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "first_name": "Sophie",
+      "last_name": "Lefebvre",
+      "specialty": "derma",
+      "room_number": "D404",
+      "is_active": true,
+      "current_patient_id": null
+    },
+    {
+      "id": "6a81a80c-c522-4169-9c3b-618d4e7b952a",
+      "first_name": "Jean",
+      "last_name": "Martin",
+      "specialty": "general",
+      "room_number": "A101",
+      "is_active": true,
+      "current_patient_id": "55f39b9d-c869-4d83-95c9-9a59eb061396"
+    },
+    {
+      "id": "4ef56eaa-3441-4487-8691-0c7dcc2f450a",
+      "first_name": "Lucas",
+      "last_name": "Moreau",
+      "specialty": "ortho",
+      "room_number": "E505",
+      "is_active": false,
+      "current_patient_id": null
+    }
+  ],
+  "waiting_patients": [
+    {
+      "id": "77f5279b-9157-48c9-85a3-11af81429618",
+      "first_name": "Hugues",
+      "last_name": "Marin",
+      "date_of_birth": "1958-09-18",
+      "phone": "+33 (0)5 32 77 04 40",
+      "email": "dgrondin@example.org",
+      "priority": 2,
+      "status": "waiting",
+      "ticket_number": "20260219-001",
+      "estimated_wait_time": 19,
+      "created_at": "2026-02-19 08:32:38.469293+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "\u00c9ruption cutan\u00e9e"
+    },
+    {
+      "id": "7a20b48d-eac2-423d-9350-44f67d48f885",
+      "first_name": "Ren\u00e9",
+      "last_name": "Lefort",
+      "date_of_birth": "1981-04-06",
+      "phone": "+33 2 97 66 74 32",
+      "email": "lalexandre@example.org",
+      "priority": 3,
+      "status": "waiting",
+      "ticket_number": "20260219-004",
+      "estimated_wait_time": 57,
+      "created_at": "2026-02-19 08:04:38.512016+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Renouvellement ordonnance"
+    },
+    {
+      "id": "f3ba6fc5-825a-4766-a0c4-6f3950a37d9a",
+      "first_name": "\u00c9ric",
+      "last_name": "Tanguy",
+      "date_of_birth": "1959-03-21",
+      "phone": "02 79 31 35 44",
+      "email": "micheljean@example.net",
+      "priority": 3,
+      "status": "waiting",
+      "ticket_number": "20260219-002",
+      "estimated_wait_time": 10,
+      "created_at": "2026-02-19 09:24:38.487045+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Fi\u00e8vre \u00e9lev\u00e9e"
+    },
+    {
+      "id": "dbbbbf65-dfe4-42f5-94a5-d5a7e5e98af8",
+      "first_name": "J\u00e9r\u00f4me",
+      "last_name": "Gr\u00e9goire",
+      "date_of_birth": "1973-09-29",
+      "phone": "+33 (0)5 36 45 87 02",
+      "email": "pascallorraine@example.com",
+      "priority": 3,
+      "status": "waiting",
+      "ticket_number": "20260219-003",
+      "estimated_wait_time": 29,
+      "created_at": "2026-02-19 10:20:38.501447+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Entorse cheville"
+    },
+    {
+      "id": "b2501d0f-d03c-4bcc-87b2-333d058312cc",
+      "first_name": "In\u00e8s",
+      "last_name": "Bouvet",
+      "date_of_birth": "2020-06-06",
+      "phone": "+33 4 83 63 91 07",
+      "email": "humbertlaurence@example.org",
+      "priority": 4,
+      "status": "waiting",
+      "ticket_number": "20260219-007",
+      "estimated_wait_time": 25,
+      "created_at": "2026-02-19 08:29:38.555553+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Entorse cheville"
+    },
+    {
+      "id": "22819688-8166-44c2-85a0-a523f0d201d3",
+      "first_name": "Richard",
+      "last_name": "Guyot",
+      "date_of_birth": "2007-12-26",
+      "phone": "+33 5 64 07 74 93",
+      "email": "julesboyer@example.org",
+      "priority": 4,
+      "status": "waiting",
+      "ticket_number": "20260219-005",
+      "estimated_wait_time": 27,
+      "created_at": "2026-02-19 08:43:38.527052+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Renouvellement ordonnance"
+    },
+    {
+      "id": "3b02eadd-0505-417d-b484-14e5c7f0623e",
+      "first_name": "Philippine",
+      "last_name": "Thomas",
+      "date_of_birth": "2009-07-03",
+      "phone": "02 78 32 78 10",
+      "email": "gerard37@example.org",
+      "priority": 4,
+      "status": "waiting",
+      "ticket_number": "20260219-006",
+      "estimated_wait_time": 56,
+      "created_at": "2026-02-19 09:23:38.541424+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Douleurs abdominales"
+    },
+    {
+      "id": "5aaa1ab2-6697-4de9-9031-7a6f875a3d60",
+      "first_name": "S\u00e9bastien",
+      "last_name": "Texier",
+      "date_of_birth": "2009-08-08",
+      "phone": "+33 5 96 10 87 41",
+      "email": "lefevrecaroline@example.com",
+      "priority": 4,
+      "status": "waiting",
+      "ticket_number": "20260219-008",
+      "estimated_wait_time": 31,
+      "created_at": "2026-02-19 10:10:38.567413+00:00",
+      "called_at": null,
+      "completed_at": null,
+      "assigned_doctor_id": null,
+      "notes": "Fi\u00e8vre \u00e9lev\u00e9e"
+    }
+  ],
+  "stats": [
+    {
+      "id": 59,
+      "patient_id": "669a2e87-8a7f-47f5-8a10-d0459b0fd8c7",
+      "doctor_id": "6a81a80c-c522-4169-9c3b-618d4e7b952a",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.896856+00:00",
+      "details": {
+        "total_time": 70.0,
+        "consultation_duration": 40.0
+      }
+    },
+    {
+      "id": 58,
+      "patient_id": "669a2e87-8a7f-47f5-8a10-d0459b0fd8c7",
+      "doctor_id": "6a81a80c-c522-4169-9c3b-618d4e7b952a",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.894277+00:00",
+      "details": {
+        "wait_time": 30.0
+      }
+    },
+    {
+      "id": 57,
+      "patient_id": "669a2e87-8a7f-47f5-8a10-d0459b0fd8c7",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.891578+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 56,
+      "patient_id": "6879abc3-11ce-4007-9dd1-95af921acd13",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.878985+00:00",
+      "details": {
+        "total_time": 103.0,
+        "consultation_duration": 58.0
+      }
+    },
+    {
+      "id": 55,
+      "patient_id": "6879abc3-11ce-4007-9dd1-95af921acd13",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.876382+00:00",
+      "details": {
+        "wait_time": 45.0
+      }
+    },
+    {
+      "id": 54,
+      "patient_id": "6879abc3-11ce-4007-9dd1-95af921acd13",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.870437+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 53,
+      "patient_id": "fe6a1a85-5abc-4723-8261-2c5e1db24815",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.856290+00:00",
+      "details": {
+        "total_time": 80.0,
+        "consultation_duration": 60.0
+      }
+    },
+    {
+      "id": 52,
+      "patient_id": "fe6a1a85-5abc-4723-8261-2c5e1db24815",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.853617+00:00",
+      "details": {
+        "wait_time": 20.0
+      }
+    },
+    {
+      "id": 51,
+      "patient_id": "fe6a1a85-5abc-4723-8261-2c5e1db24815",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.851017+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 50,
+      "patient_id": "d869ec7c-b978-4460-9098-21406765e463",
+      "doctor_id": "4ef56eaa-3441-4487-8691-0c7dcc2f450a",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.838322+00:00",
+      "details": {
+        "total_time": 85.0,
+        "consultation_duration": 48.0
+      }
+    },
+    {
+      "id": 49,
+      "patient_id": "d869ec7c-b978-4460-9098-21406765e463",
+      "doctor_id": "4ef56eaa-3441-4487-8691-0c7dcc2f450a",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.835769+00:00",
+      "details": {
+        "wait_time": 37.0
+      }
+    },
+    {
+      "id": 48,
+      "patient_id": "d869ec7c-b978-4460-9098-21406765e463",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.833201+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 47,
+      "patient_id": "76f65641-d992-4257-a53a-673e420f9714",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.820580+00:00",
+      "details": {
+        "total_time": 89.0,
+        "consultation_duration": 50.0
+      }
+    },
+    {
+      "id": 46,
+      "patient_id": "76f65641-d992-4257-a53a-673e420f9714",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.817899+00:00",
+      "details": {
+        "wait_time": 39.0
+      }
+    },
+    {
+      "id": 45,
+      "patient_id": "76f65641-d992-4257-a53a-673e420f9714",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.815218+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 44,
+      "patient_id": "fc917acc-2250-4d61-8f14-6f046366a9fc",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.802624+00:00",
+      "details": {
+        "total_time": 41.0,
+        "consultation_duration": 19.0
+      }
+    },
+    {
+      "id": 43,
+      "patient_id": "fc917acc-2250-4d61-8f14-6f046366a9fc",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.799861+00:00",
+      "details": {
+        "wait_time": 22.0
+      }
+    },
+    {
+      "id": 42,
+      "patient_id": "fc917acc-2250-4d61-8f14-6f046366a9fc",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.797083+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 41,
+      "patient_id": "90c5bd42-918c-4d74-a70e-9476293ba321",
+      "doctor_id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.785317+00:00",
+      "details": {
+        "total_time": 74.0,
+        "consultation_duration": 57.0
+      }
+    },
+    {
+      "id": 40,
+      "patient_id": "90c5bd42-918c-4d74-a70e-9476293ba321",
+      "doctor_id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.783145+00:00",
+      "details": {
+        "wait_time": 17.0
+      }
+    },
+    {
+      "id": 39,
+      "patient_id": "90c5bd42-918c-4d74-a70e-9476293ba321",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.781050+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 38,
+      "patient_id": "65f57a8b-dad7-4a49-b39d-396f324175be",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.771587+00:00",
+      "details": {
+        "total_time": 44.0,
+        "consultation_duration": 28.0
+      }
+    },
+    {
+      "id": 37,
+      "patient_id": "65f57a8b-dad7-4a49-b39d-396f324175be",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.769525+00:00",
+      "details": {
+        "wait_time": 16.0
+      }
+    },
+    {
+      "id": 36,
+      "patient_id": "65f57a8b-dad7-4a49-b39d-396f324175be",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.767310+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 35,
+      "patient_id": "c4f04e4f-9bbf-49c2-b1da-1585ced3c7cc",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.757404+00:00",
+      "details": {
+        "total_time": 88.0,
+        "consultation_duration": 44.0
+      }
+    },
+    {
+      "id": 34,
+      "patient_id": "c4f04e4f-9bbf-49c2-b1da-1585ced3c7cc",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.755181+00:00",
+      "details": {
+        "wait_time": 44.0
+      }
+    },
+    {
+      "id": 33,
+      "patient_id": "c4f04e4f-9bbf-49c2-b1da-1585ced3c7cc",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.753063+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 32,
+      "patient_id": "929d016d-99c1-4c2d-9ac4-b138e2f23dac",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.739739+00:00",
+      "details": {
+        "total_time": 34.0,
+        "consultation_duration": 20.0
+      }
+    },
+    {
+      "id": 31,
+      "patient_id": "929d016d-99c1-4c2d-9ac4-b138e2f23dac",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.737228+00:00",
+      "details": {
+        "wait_time": 14.0
+      }
+    },
+    {
+      "id": 30,
+      "patient_id": "929d016d-99c1-4c2d-9ac4-b138e2f23dac",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.734177+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 29,
+      "patient_id": "72b8d800-6de4-49db-92e0-e15aa2d79469",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.723136+00:00",
+      "details": {
+        "total_time": 93.0,
+        "consultation_duration": 48.0
+      }
+    },
+    {
+      "id": 28,
+      "patient_id": "72b8d800-6de4-49db-92e0-e15aa2d79469",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.720605+00:00",
+      "details": {
+        "wait_time": 45.0
+      }
+    },
+    {
+      "id": 27,
+      "patient_id": "72b8d800-6de4-49db-92e0-e15aa2d79469",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.718294+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 26,
+      "patient_id": "163ab9cc-9d19-471d-9871-80f249a7efc7",
+      "doctor_id": "4ef56eaa-3441-4487-8691-0c7dcc2f450a",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.706672+00:00",
+      "details": {
+        "total_time": 66.0,
+        "consultation_duration": 37.0
+      }
+    },
+    {
+      "id": 25,
+      "patient_id": "163ab9cc-9d19-471d-9871-80f249a7efc7",
+      "doctor_id": "4ef56eaa-3441-4487-8691-0c7dcc2f450a",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.704398+00:00",
+      "details": {
+        "wait_time": 29.0
+      }
+    },
+    {
+      "id": 24,
+      "patient_id": "163ab9cc-9d19-471d-9871-80f249a7efc7",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.702240+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 23,
+      "patient_id": "18ccb286-7e2d-49a8-85e5-5a0198f8cdf4",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.689259+00:00",
+      "details": {
+        "total_time": 30.0,
+        "consultation_duration": 17.0
+      }
+    },
+    {
+      "id": 22,
+      "patient_id": "18ccb286-7e2d-49a8-85e5-5a0198f8cdf4",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.687143+00:00",
+      "details": {
+        "wait_time": 13.0
+      }
+    },
+    {
+      "id": 21,
+      "patient_id": "18ccb286-7e2d-49a8-85e5-5a0198f8cdf4",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.684794+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 20,
+      "patient_id": "25b88a2d-b35a-43aa-bcf1-b1eac4290dfd",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.672779+00:00",
+      "details": {
+        "total_time": 50.0,
+        "consultation_duration": 35.0
+      }
+    },
+    {
+      "id": 19,
+      "patient_id": "25b88a2d-b35a-43aa-bcf1-b1eac4290dfd",
+      "doctor_id": "2f611978-ddc0-40f3-846e-0e367dc56035",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.670146+00:00",
+      "details": {
+        "wait_time": 15.0
+      }
+    },
+    {
+      "id": 18,
+      "patient_id": "25b88a2d-b35a-43aa-bcf1-b1eac4290dfd",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.667643+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 17,
+      "patient_id": "a76d8f77-77d0-4336-bddb-7130abda3639",
+      "doctor_id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "action": "completed",
+      "timestamp": "2026-02-19 10:34:38.654566+00:00",
+      "details": {
+        "total_time": 27.0,
+        "consultation_duration": 15.0
+      }
+    },
+    {
+      "id": 16,
+      "patient_id": "a76d8f77-77d0-4336-bddb-7130abda3639",
+      "doctor_id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.648909+00:00",
+      "details": {
+        "wait_time": 12.0
+      }
+    },
+    {
+      "id": 15,
+      "patient_id": "a76d8f77-77d0-4336-bddb-7130abda3639",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.646746+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 14,
+      "patient_id": "8c2c6a29-e5d0-47b6-9bc1-2bd69324cb26",
+      "doctor_id": "7a588518-2a38-4c80-bf24-b1fb409a6123",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.632430+00:00",
+      "details": {
+        "wait_time_before_call": 80.0
+      }
+    },
+    {
+      "id": 13,
+      "patient_id": "8c2c6a29-e5d0-47b6-9bc1-2bd69324cb26",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.630297+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 12,
+      "patient_id": "3888d792-fdfa-490b-b34d-69f25b42fdbc",
+      "doctor_id": "dfe40498-d061-47e8-89ff-722b4f72c197",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.615716+00:00",
+      "details": {
+        "wait_time_before_call": 25.0
+      }
+    },
+    {
+      "id": 11,
+      "patient_id": "3888d792-fdfa-490b-b34d-69f25b42fdbc",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.613464+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 10,
+      "patient_id": "55f39b9d-c869-4d83-95c9-9a59eb061396",
+      "doctor_id": "6a81a80c-c522-4169-9c3b-618d4e7b952a",
+      "action": "called",
+      "timestamp": "2026-02-19 10:34:38.595341+00:00",
+      "details": {
+        "wait_time_before_call": 73.0
+      }
+    },
+    {
+      "id": 9,
+      "patient_id": "55f39b9d-c869-4d83-95c9-9a59eb061396",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.592848+00:00",
+      "details": {
+        "source": "seed_data"
+      }
+    },
+    {
+      "id": 8,
+      "patient_id": "5aaa1ab2-6697-4de9-9031-7a6f875a3d60",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.576463+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 4
+      }
+    },
+    {
+      "id": 7,
+      "patient_id": "b2501d0f-d03c-4bcc-87b2-333d058312cc",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.563946+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 4
+      }
+    },
+    {
+      "id": 6,
+      "patient_id": "3b02eadd-0505-417d-b484-14e5c7f0623e",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.553439+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 4
+      }
+    },
+    {
+      "id": 5,
+      "patient_id": "22819688-8166-44c2-85a0-a523f0d201d3",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.536684+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 4
+      }
+    },
+    {
+      "id": 4,
+      "patient_id": "7a20b48d-eac2-423d-9350-44f67d48f885",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.524671+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 3
+      }
+    },
+    {
+      "id": 3,
+      "patient_id": "dbbbbf65-dfe4-42f5-94a5-d5a7e5e98af8",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.510001+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 3
+      }
+    },
+    {
+      "id": 2,
+      "patient_id": "f3ba6fc5-825a-4766-a0c4-6f3950a37d9a",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.498101+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 3
+      }
+    },
+    {
+      "id": 1,
+      "patient_id": "77f5279b-9157-48c9-85a3-11af81429618",
+      "doctor_id": null,
+      "action": "created",
+      "timestamp": "2026-02-19 10:34:38.483708+00:00",
+      "details": {
+        "source": "seed_data",
+        "initial_priority": 2
+      }
+    }
+  ]
+}

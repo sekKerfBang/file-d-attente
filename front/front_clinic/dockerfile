@@ -1,0 +1,126 @@
+# ==========================================
+# STAGE 1: Dependencies
+# ==========================================
+FROM node:24.10.1-alpine AS deps
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copie des fichiers de dépendances
+COPY package.json package-lock.json* ./
+
+# Installation des dépendances avec cache
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --only=production && \
+    npm cache clean --force
+
+# ==========================================
+# STAGE 2: Builder
+# ==========================================
+FROM node:24.10.1-alpine AS builder
+
+WORKDIR /app
+
+# Installation des dépendances de build
+COPY package.json package-lock.json* ./
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
+
+# Copie du code source
+COPY . .
+
+# Variables d'environnement de build
+ARG VITE_API_URL=http://localhost:8000/api
+ARG VITE_WS_URL=ws://localhost:8000/ws
+ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_WS_URL=${VITE_WS_URL}
+ENV NODE_ENV=production
+
+# Build de l'application
+RUN npm run build:prod
+
+# ==========================================
+# STAGE 3: Production Nginx
+# ==========================================
+FROM nginx:1.25-alpine AS runner
+
+# Installation de security headers et modules
+RUN apk add --no-cache curl ca-certificates
+
+# Configuration Nginx optimisée
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Configuration Nginx avec compression et cache
+RUN echo 'server { \
+    listen 80; \
+    server_name localhost; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    \
+    # Gzip compression \
+    gzip on; \
+    gzip_vary on; \
+    gzip_proxied any; \
+    gzip_comp_level 6; \
+    gzip_types text/plain text/css text/xml application/json application/javascript application/rss+xml application/atom+xml image/svg+xml; \
+    \
+    # Cache statique \
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ { \
+        expires 1y; \
+        add_header Cache-Control "public, immutable"; \
+        access_log off; \
+    } \
+    \
+    # Security headers \
+    add_header X-Frame-Options "SAMEORIGIN" always; \
+    add_header X-Content-Type-Options "nosniff" always; \
+    add_header X-XSS-Protection "1; mode=block" always; \
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always; \
+    add_header Content-Security-Policy "default-src '\''self'\''; script-src '\''self'\'' '\''unsafe-inline'\''; style-src '\''self'\'' '\''unsafe-inline'\''; img-src '\''self'\'' data: https:; font-src '\''self'\''; connect-src '\''self'\'' ws: wss: http: https:;" always; \
+    \
+    # API Proxy \
+    location /api { \
+        proxy_pass http://backend:8000; \
+        proxy_http_version 1.1; \
+        proxy_set_header Upgrade $http_upgrade; \
+        proxy_set_header Connection '\''upgrade'\''; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; \
+        proxy_set_header X-Forwarded-Proto $scheme; \
+        proxy_cache_bypass $http_upgrade; \
+        proxy_read_timeout 86400; \
+    } \
+    \
+    # WebSocket Proxy \
+    location /ws { \
+        proxy_pass http://backend:8000; \
+        proxy_http_version 1.1; \
+        proxy_set_header Upgrade $http_upgrade; \
+        proxy_set_header Connection "upgrade"; \
+        proxy_set_header Host $host; \
+        proxy_set_header X-Real-IP $remote_addr; \
+        proxy_read_timeout 86400; \
+    } \
+    \
+    # React Router support \
+    location / { \
+        try_files $uri $uri/ /index.html; \
+        add_header Cache-Control "no-cache, no-store, must-revalidate"; \
+    } \
+    \
+    # Health check \
+    location /health { \
+        access_log off; \
+        return 200 "healthy\n"; \
+        add_header Content-Type text/plain; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/health || exit 1
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
