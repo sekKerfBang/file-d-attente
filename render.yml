@@ -1,0 +1,109 @@
+version: 1
+
+# ====================== BASE DE DONNÉES ======================
+databases:
+  - name: clinic
+    plan: starter          # ou free pour tester
+    databaseName: clinic
+    user: clinic
+
+# ====================== REDIS ======================
+services:
+  - type: keyvalue
+    name: clinic-redis
+    plan: starter          # gratuit en starter
+
+  # ====================== FRONTEND (Static Site - MEILLEUR CHOIX) ======================
+  - type: static
+    name: clinic-frontend
+    repo: https://github.com/sekKerfBang/file-d-attente   # change avec le tien
+    branch: main
+    rootDir: frontend-react
+    buildCommand: npm ci && npm run build:prod
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://api.clinique.fr
+      - key: VITE_WS_URL
+        value: wss://api.clinique.fr/ws
+    domains:
+      - clinique.fr
+      - www.clinique.fr
+
+  # ====================== BACKEND (Docker) ======================
+  - type: web
+    name: clinic-backend
+    runtime: docker
+    dockerfilePath: backend_django6/Dockerfile
+    dockerContext: backend_django6
+    plan: starter
+    healthCheckPath: /api/health/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinic
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: clinic-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: api.clinique.fr,clinique.fr,www.clinique.fr
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://clinique.fr,https://www.clinique.fr
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+    domains:
+      - api.clinique.fr
+
+  # ====================== CELERY WORKER ======================
+  - type: worker
+    name: clinic-celery-worker
+    runtime: docker
+    dockerfilePath: backend_django6/Dockerfile
+    dockerContext: backend_django6
+    plan: starter
+    numInstances: 1
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinic-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: clinic-redis
+          property: connectionString
+      - key: SECRET_KEY
+        fromService:
+          name: clinic-backend
+          envVarKey: SECRET_KEY
+    command: celery -A config worker -l info --concurrency=4 --prefetch-multiplier=1
+
+  # ====================== CELERY BEAT ======================
+  - type: worker
+    name: clinic-celery-beat
+    runtime: docker
+    dockerfilePath: backend_django6/Dockerfile
+    dockerContext: backend_django6
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinic-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: clinic-redis
+          property: connectionString
+      - key: SECRET_KEY
+        fromService:
+          name: clinic-backend
+          envVarKey: SECRET_KEY
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler

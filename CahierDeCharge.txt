@@ -1,0 +1,215 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+📋 CAHIER DES CHARGES FONCTIONNEL
+
+    ClinicQueue - Système de Gestion de File d'Attente Médicale
+
+
+    1. PRESENTATION DU PROJET
+        
+        1.1 Contexte
+        
+        Solution numérique pour la gestion des files d'attente dans les cliniques médicales, permettant l'organisation optimale des consultations et la réduction du temps d'attente des patients.
+        
+        1.2 Objectifs
+        
+            . Réduire le temps d'attente perçu par les patients
+
+            . Optimiser la charge de travail des médecins
+
+            . Améliorer la communication patient-clinique
+
+            . Digitaliser la gestion des consultations
+
+    2. ACTEURS DU SYSTEME
+
+        | Acteur             | Description                            | Accès                  |
+        | ------------------ | -------------------------------------- | ---------------------- |
+        | **Patient**        | Personne souhaitant consulter          | Application web/mobile |
+        | **Médecin**        | Praticien effectuant les consultations | Interface staff        |
+        | **Secrétaire**     | Gestionnaire des rendez-vous           | Interface staff        |
+        | **Administrateur** | Gestionnaire du système                | Interface admin        |
+      
+    3. FONCTIONNALITES PAR MODULE
+
+        MODULE 1 : AUTHENTIFICATION & GESTION DES UTILISATEURS    
+
+            | ID      | Fonctionnalité            | Description                          | Priorité | Coût estimé |
+            | ------- | ------------------------- | ------------------------------------ | -------- | ----------- |
+            | AUTH-01 | Inscription patient       | Création compte avec email/téléphone | Haute    | 400 €       |
+            | AUTH-02 | Connexion sécurisée       | JWT avec refresh token               | Haute    | 300 €       |
+            | AUTH-03 | Gestion profil            | Modification infos personnelles      | Moyenne  | 200 €       |
+            | AUTH-04 | Rôles et permissions      | Admin/Doctor/Secretary/Patient       | Haute    | 300 €       |
+            | AUTH-05 | Récupération mot de passe | Email de réinitialisation            | Moyenne  | 250 €       |
+
+            Sous-total Module 1 : 1 450 €
+
+        MODULE 2 : INTERFACE PATIENT
+
+            | ID     | Fonctionnalité               | Description                                 | Priorité | Coût estimé |
+            | ------ | ---------------------------- | ------------------------------------------- | -------- | ----------- |
+            | PAT-01 | Réservation ticket           | Prendre un numéro en ligne                  | Haute    | 600 €       |
+            | PAT-02 | Choix du médecin             | Sélectionner un praticien spécifique        | Moyenne  | 400 €       |
+            | PAT-03 | Visualisation file d'attente | Voir sa position en temps réel              | Haute    | 500 €       |
+            | PAT-04 | Temps d'attente estimé       | Calcul dynamique basé sur les consultations | Haute    | 400 €       |
+            | PAT-05 | Notifications push           | Alertes quand c'est son tour                | Haute    | 500 €       |
+            | PAT-06 | Historique des consultations | Voir ses visites passées                    | Basse    | 300 €       |
+            | PAT-07 | Annulation de ticket         | Annuler sa réservation                      | Moyenne  | 200 €       |
+            | PAT-08 | Évaluation post-consultation | Noter la consultation                       | Basse    | 250 €       |
+
+            Sous-total Module 2 : 3 150 €
+
+        MODULE 3 : INTERFACE STAFF (Médecin/Secrétaire)
+
+            | ID       | Fonctionnalité                    | Description                        | Priorité | Coût estimé |
+            | -------- | --------------------------------- | ---------------------------------- | -------- | ----------- |
+            | STAFF-01 | Tableau de bord temps réel        | Vue d'ensemble de la file          | Haute    | 500 €       |
+            | STAFF-02 | Appel du prochain patient         | Bouton "Appeler suivant"           | Haute    | 400 €       |
+            | STAFF-03 | Gestion des consultations         | Démarrer/Terminer une consultation | Haute    | 400 €       |
+            | STAFF-04 | Visualisation patients en attente | Liste avec priorités               | Haute    | 350 €       |
+            | STAFF-05 | Modification priorité patient     | Urgence/Normal/etc.                | Moyenne  | 200 €       |
+            | STAFF-06 | Annulation patient                | Retirer un patient de la file      | Moyenne  | 150 €       |
+            | STAFF-07 | Statistiques journalières         | Patients vus, temps moyen          | Moyenne  | 400 €       |
+            | STAFF-08 | Gestion du statut médecin         | Actif/Inactif/Pause                | Moyenne  | 200 €       |
+
+            Sous-total Module 3 : 2 600 €
+
+        MODULE 4 : ADMINISTRATION
+
+            | ID       | Fonctionnalité           | Description                | Priorité | Coût estimé |
+            | -------- | ------------------------ | -------------------------- | -------- | ----------- |
+            | ADMIN-01 | Gestion des médecins     | CRUD praticiens            | Haute    | 400 €       |
+            | ADMIN-02 | Gestion des secrétaires  | CRUD personnel             | Haute    | 300 €       |
+            | ADMIN-03 | Configuration des salles | Attribution des cabinets   | Moyenne  | 250 €       |
+            | ADMIN-04 | Rapports statistiques    | Export PDF/Excel           | Moyenne  | 500 €       |
+            | ADMIN-05 | Historique complet       | Logs de toutes les actions | Basse    | 400 €       |
+            | ADMIN-06 | Paramètres système       | Horaires, durées estimées  | Moyenne  | 300 €       |
+
+            Sous-total Module 4 : 2 150 €
+
+        MODULE 5 : WEBSOCKET & TEMPS RÉEL
+
+            | ID    | Fonctionnalité             | Description              | Priorité | Coût estimé |
+            | ----- | -------------------------- | ------------------------ | -------- | ----------- |
+            | WS-01 | Mise à jour temps réel     | File d'attente live      | Haute    | 600 €       |
+            | WS-02 | Notifications instantanées | Push sans refresh page   | Haute    | 500 €       |
+            | WS-03 | Multi-écrans synchronisés  | TV + Tablettes + Desktop | Moyenne  | 400 €       |
+            | WS-04 | Alertes sonores            | Bip quand appel patient  | Moyenne  | 200 €       |
+
+            Sous-total Module 5 : 1 700 €
+
+        MODULE 6 : API & BACKEND
+
+            | ID     | Fonctionnalité       | Description              | Priorité | Coût estimé |
+            | ------ | -------------------- | ------------------------ | -------- | ----------- |
+            | API-01 | API REST complète    | Endpoints CRUD           | Haute    | 800 €       |
+            | API-02 | Authentification JWT | Tokens sécurisés         | Haute    | 400 €       |
+            | API-03 | Documentation API    | Swagger/OpenAPI          | Moyenne  | 300 €       |
+            | API-04 | Rate limiting        | Protection contre abus   | Basse    | 200 €       |
+            | API-05 | WebSocket endpoints  | Channels pour temps réel | Haute    | 500 €       |
+
+            Sous-total Module 6 : 2 200 €
+
+    4. COUTS TECHNIQUES & INFRASTRUCTURE
+
+        | Élément                                  | Description            | Coût mensuel | Coût annuel |
+        | ---------------------------------------- | ---------------------- | ------------ | ----------- |
+        | **Hébergement cloud** (AWS/DigitalOcean) | Serveur + BDD + Redis  | 150 €        | 1 800 €     |
+        | **Nom de domaine**                       | clinicqueue.com        | 15 €         | 180 €       |
+        | **Certificat SSL**                       | HTTPS wildcard         | -            | 100 €       |
+        | **Service SMS** (Twilio)                 | Notifications par SMS  | 50 €         | 600 €       |
+        | **Service Email** (SendGrid)             | Emails transactionnels | 20 €         | 240 €       |
+        | **Monitoring** (Sentry/DataDog)          | Logs et alertes        | 30 €         | 360 €       |
+        | **Backup automatisé**                    | Snapshots quotidiens   | 20 €         | 240 €       |
+
+        Sous-total Infrastructure annuel : 3 520 €
+
+    5. OPTIONS & MODULES FUTURS
+
+        | Module                               | Description                         | Coût estimé |
+        | ------------------------------------ | ----------------------------------- | ----------- |
+        | **Application mobile** (iOS/Android) | App native React Native             | 8 000 €     |
+        | **Paiement en ligne**                | Intégration Stripe/PayPal           | 1 500 €     |
+        | **Téléconsultation**                 | Vidéo intégrée (WebRTC)             | 3 000 €     |
+        | **IA prédiction d'attente**          | Machine learning pour estimations   | 2 500 €     |
+        | **Multi-cliniques**                  | Gestion de plusieurs sites          | 3 000 €     |
+        | **API tierce**                       | Connexion aux systèmes hospitaliers | 2 000 €     |
+
+    6. RECAPITULATIF DES COUTS
+
+    Développement (forfait)
+
+        | Phase                | Modules                     | Durée       | Coût     |
+        | -------------------- | --------------------------- | ----------- | -------- |
+        | **MVP**              | Modules 1-3 essentiels      | 6 semaines  | 7 200 €  |
+        | **Version complète** | Tous les modules 1-6        | 12 semaines | 13 250 € |
+        | **Premium**          | + Options mobile & paiement | 20 semaines | 24 750 € |
+
+    Maintenance annuelle
+
+        | Type               | Description               | Coût/an |
+        | ------------------ | ------------------------- | ------- |
+        | **Corrective**     | Bugs et correctifs        | 2 000 € |
+        | **Évolutive**      | Nouvelles fonctionnalités | 3 000 € |
+        | **Infrastructure** | Hébergement & services    | 3 520 € |
+        | **Support**        | Assistance technique      | 1 500 € |
+
+        Total maintenance annuelle : 10 020 €
+
+    7. PLANNING DE REALISATION
+
+        Semaine 1-2 :   [======]  Setup + Auth + Modèles BDD
+        Semaine 3-4 :   [======]  API Backend + WebSocket
+        Semaine 5-6 :   [======]  Interface Staff (Dashboard)
+        Semaine 7-8 :   [======]  Interface Patient + Réservation
+        Semaine 9-10 :  [======]  Notifications + Temps réel
+        Semaine 11-12 : [======]  Tests + Déploiement + Documentation    
+
+    8. LIVRABLES
+
+        | Livrable                | Format         |
+        | ----------------------- | -------------- |
+        | Code source complet     | GitHub/GitLab  |
+        | Documentation technique | Markdown/PDF   |
+        | Guide utilisateur       | PDF + Vidéos   |
+        | Documentation API       | Swagger UI     |
+        | Scripts de déploiement  | Docker + CI/CD |
+        | Manuel d'administration | PDF            |
+    
+    9. GARANTIES & SUPPORT
+
+        | Service                | Durée     | Inclus         |
+        | ---------------------- | --------- | -------------- |
+        | Garantie bugs          | 3 mois    | Oui            |
+        | Support email          | 6 mois    | Oui            |
+        | Formation utilisateurs | 1 journée | Option (+800€) |
+        | Maintenance préventive | 12 mois   | Option         |
+
+Document établi le : 19 Février 2026
+Validité du devis : 30 jours
+Contact : 620217714/660020162
+
+

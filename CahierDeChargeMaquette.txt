@@ -1,0 +1,314 @@
+1. MAQUETTES (WIREFRAMES)
+
+1.1 Interface Patient - Réservation
+
+┌─────────────────────────────────────────┐
+│  🔷 ClinicQueue        [👤] [🔔] [⚙️]  │
+├─────────────────────────────────────────┤
+│                                         │
+│  ┌─────────────────────────────────┐    │
+│  │  🎫 PRENDRE UN TICKET          │    │
+│  │                                 │    │
+│  │  Votre position estimée:        │    │
+│  │  ┌─────┐                        │    │
+│  │  │  12 │  patients avant vous   │    │
+│  │  └─────┘                        │    │
+│  │                                 │    │
+│  │  Temps d'attente: ~25 min       │    │
+│  │                                 │    │
+│  │  [🔴 Urgence] [🟡 Prioritaire]  │    │
+│  │  [🟢 Normal]  [⚪ Non urgent]  │    │
+│  │                                 │    │
+│  │  Motif: [________________]      │    │
+│  │                                 │    │
+│  │  Choisir médecin (optionnel):   │    │
+│  │  [Dr. Smith ▼]                  │    │
+│  │                                 │    │
+│  │     [  CONFIRMER  ]             │    │
+│  └─────────────────────────────────┘    │
+│                                         │
+│  📍 Votre ticket: #20250219-042         │
+│  🔔 Notifications activées              │
+│                                         │
+└─────────────────────────────────────────┘
+
+
+1.2 Interface Patient - Suivi en temps réel
+
+┌─────────────────────────────────────────┐
+│  🔷 ClinicQueue        [👤] [🔔] [⚙️]  │
+├─────────────────────────────────────────┤
+│                                         │
+│  ┌─────────────────────────────────┐    │
+│  │      ⏱️ TEMPS RÉEL             │    │
+│  │                                 │    │
+│  │           ┌─────────┐           │    │
+│  │           │   #3    │           │    │
+│  │           │POSITION │           │    │
+│  │           └─────────┘           │    │
+│  │                                 │    │
+│  │  ████████████████████░░░░░░░░░ │    │
+│  │  60%    12 min restantes        │    │
+│  │                                 │    │
+│  │  🩺 Dr. Martin - Salle 3        │    │
+│  │  📞 Vous serez appelé par SMS   │    │
+│  └─────────────────────────────────┘    │
+│                                         │
+│  ┌─────────────────────────────────┐    │
+│  │  📋 FILE D'ATTENTE ACTUELLE     │    │
+│  │                                 │    │
+│  │  1. #042 - 🔴 Urgence           │    │
+│  │  2. #041 - 🟡 Prioritaire       │    │
+│  │  → 3. #043 - 🟢 VOUS ◀          │    │
+│  │  4. #044 - 🟢 Normal            │    │
+│  │  5. #045 - ⚪ Non urgent         │    │
+│  └─────────────────────────────────┘    │
+│                                         │
+│  [❌ Annuler ma réservation]            │
+│                                         │
+└─────────────────────────────────────────┘
+
+1.3 Interface Staff - Tableau de bord
+
+┌─────────────────────────────────────────────────────────┐
+│  🔷 ClinicQueue                    [👤 Dr. Martin] [🚪] │
+├─────────────────────────────────────────────────────────┤
+│  [📊 Dashboard] [👥 File] [📈 Stats] [⚙️ Paramètres]     │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌─────────────────┐  ┌─────────────────────────────┐   │
+│  │  🩺 MON STATUT  │  │  📊 STATISTIQUES JOUR       │   │
+│  │                 │  │                             │   │
+│  │  [🟢 ACTIF]     │  │  Patients vus: 12           │   │
+│  │                 │  │  En cours: 1                  │   │
+│  │  Patient actuel:│  │  Temps moyen: 18 min        │   │
+│  │  #038 - M. Dupont│  │  File d'attente: 5          │   │
+│  │                 │  │                             │   │
+│  │  [Démarrer]     │  │  [Voir détails]             │   │
+│  │  [Terminer]     │  │                             │   │
+│  └─────────────────┘  └─────────────────────────────┘   │
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │           📋 FILE D'ATTENTE                    │    │
+│  │                                                 │    │
+│  │  🔴 #042 - Urgence - Mme Martin - 10h15        │    │
+│  │     [Appeler] [Modifier] [Annuler]             │    │
+│  │                                                 │    │
+│  │  🟡 #041 - Prioritaire - M. Bernard - 10h08    │    │
+│  │     [Appeler] [Modifier] [Annuler]             │    │
+│  │                                                 │    │
+│  │  🟢 #043 - Normal - Mlle Petit - 10h22       │    │
+│  │     [Appeler] [Modifier] [Annuler]             │    │
+│  │                                                 │    │
+│  │  ⚪ #045 - Non urgent - M. Durand - 10h30      │    │
+│  │     [Appeler] [Modifier] [Annuler]             │    │
+│  │                                                 │    │
+│  │        [  APPELER SUIVANT  ]                   │    │
+│  └─────────────────────────────────────────────────┘    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+1.4 Interface Admin - Gestion
+
+┌─────────────────────────────────────────────────────────┐
+│  🔷 ClinicQueue - Administration         [👤 Admin] [🚪]│
+├─────────────────────────────────────────────────────────┤
+│  [👨‍⚕️ Médecins] [👥 Personnel] [📊 Rapports] [⚙️ Config]  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │           👨‍⚕️ GESTION DES MÉDECINS              │    │
+│  │                                                 │    │
+│  │  [+ Ajouter un médecin]                        │    │
+│  │                                                 │    │
+│  │  ┌────────┬─────────────┬──────────┬────────┐  │    │
+│  │  │ Nom    │ Spécialité  │ Salle    │ Statut │  │    │
+│  │  ├────────┼─────────────┼──────────┼────────┤  │    │
+│  │  │ Martin │ Généraliste │ Salle 3  │ 🟢 Actif│  │    │
+│  │  │ Smith  │ Cardiologue │ Salle 1  │ 🟢 Actif│  │    │
+│  │  │ Durand │ Pédiatre    │ Salle 2  │ 🔴 Pause│  │    │
+│  │  └────────┴─────────────┴──────────┴────────┘  │    │
+│  │                                                 │    │
+│  │  [✏️] [🗑️]  Actions par médecin               │    │
+│  └─────────────────────────────────────────────────┘    │
+│                                                         │
+│  ┌─────────────────────────────────────────────────┐    │
+│  │           📈 RAPPORT DU 19/02/2026               │    │
+│  │                                                 │    │
+│  │  Total patients: 45    Temps moyen: 22 min      │    │
+│  │  Urgences: 3           Satisfaction: 4.2/5      │    │
+│  │                                                 │    │
+│  │  [📥 Export Excel]  [📥 Export PDF]  [📊 Voir] │    │
+│  └─────────────────────────────────────────────────┘    │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+
+2. DÉTAIL DU MODULE PATIENT (Spécifications techniques)
+
+2.1 User Stories
+
+| ID        | En tant que | Je veux                                | Afin de                                    |
+| --------- | ----------- | -------------------------------------- | ------------------------------------------ |
+| PAT-US-01 | Patient     | Réserver un ticket en ligne            | Ne pas attendre physiquement à la clinique |
+| PAT-US-02 | Patient     | Voir mon temps d'attente estimé        | Organiser mon temps en conséquence         |
+| PAT-US-03 | Patient     | Être notifié quand c'est mon tour      | Ne pas manquer mon tour                    |
+| PAT-US-04 | Patient     | Choisir mon médecin                    | Consulter le praticien de mon choix        |
+| PAT-US-05 | Patient     | Annuler ma réservation                 | Libérer ma place si je ne peux pas venir   |
+| PAT-US-06 | Patient     | Voir l'historique de mes consultations | Garder une trace de mes visites            |
+
+2.2 Règles de gestion
+
+| ID        | Règle                                                                                                 | Priorité |
+| --------- | ----------------------------------------------------------------------------------------------------- | -------- |
+| RG-PAT-01 | Un patient ne peut avoir qu'un seul ticket actif (waiting ou in\_progress)                            | Critique |
+| RG-PAT-02 | Le temps d'attente estimé = (position dans file × 15 min) - (temps moyen médecin × patients en cours) | Haute    |
+| RG-PAT-03 | Notification push envoyée 5 min avant et au moment de l'appel                                         | Haute    |
+| RG-PAT-04 | Annulation possible jusqu'à 5 min avant l'appel estimé                                                | Moyenne  |
+| RG-PAT-05 | Priorité 1 (Urgence) = appel immédiat si médecin disponible                                           | Critique |
+
+2.3 Flux détaillé - Réservation
+
+┌─────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  LOGIN  │────→│  CHOIX      │────→│  CONFIRM.   │────→│  TICKET     │
+│         │     │  MÉDECIN    │     │  MOTIF      │     │  GÉNÉRÉ     │
+└─────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+     │               │                   │                   │
+     │               │                   │                   ↓
+     │               │                   │            ┌─────────────┐
+     │               │                   │            │  WEBSOCKET  │
+     │               │                   │            │  NOTIFIE    │
+     │               │                   │            │  LE STAFF   │
+     │               │                   │            └─────────────┘
+     ↓               ↓                   ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│                    BASE DE DONNÉES                                   │
+│  • Créer Patient (status: waiting, priority: X, ticket_number)     │
+│  • Calculer estimated_wait_time                                    │
+│  • Enregistrer historique                                          │
+└─────────────────────────────────────────────────────────────────────┘
+
+2.4 API Endpoints Patient
+
+| Méthode | Endpoint                     | Description               | Auth |
+| ------- | ---------------------------- | ------------------------- | ---- |
+| POST    | `/api/patients/`             | Créer un ticket           | JWT  |
+| GET     | `/api/patients/me/`          | Mon ticket actif          | JWT  |
+| GET     | `/api/patients/`             | Liste (filtrée par email) | JWT  |
+| PATCH   | `/api/patients/{id}/cancel/` | Annuler mon ticket        | JWT  |
+| GET     | `/api/patients/history/`     | Mon historique            | JWT  |
+
+3. DIAGRAMME DE GANTT
+
+3.1 Planning MVP (6 semaines - 7 200 €)
+
+Semaine:  1        2        3        4        5        6
+          ├────────┼────────┼────────┼────────┼────────┤
+
+MODULE AUTH
+[AUTH-01] ████████
+[AUTH-02] ████████
+[AUTH-03]         ████
+[AUTH-04] ████████
+
+MODULE API/BACKEND
+[API-01]  ████████████████
+[API-02]  ████████
+[WS-01]           ████████████████
+[WS-02]                   ████████
+
+MODULE PATIENT
+[PAT-01]                  ████████████
+[PAT-02]                      ████████
+[PAT-03]                          ████████
+[PAT-04]                      ████████
+
+MODULE STAFF
+[STAFF-01]                        ████████
+[STAFF-02]                            ████████
+[STAFF-03]                            ████████
+
+TEST & DEPLOIEMENT
+[TEST]                                    ████████
+[DEPLOY]                                      ████
+
+Légende: ████ = Travail en cours
+
+3.2 Planning Version Complète (12 semaines - 13 250 €)
+
+Semaine:  1    2    3    4    5    6    7    8    9   10   11   12
+          ├────┼────┼────┼────┼────┼────┼────┼────┼────┼────┼────┤
+
+Phase 1: Fondation (Sem 1-3)
+[AUTH]    ████████████████
+[API]     ████████████████████████
+[MODELS]  ████████████████
+
+Phase 2: Core Patient (Sem 3-6)
+[PAT-01]       ████████████
+[PAT-02]            ████████████
+[PAT-03]                 ████████████
+[PAT-04]            ████████
+[PAT-05]                      ████████
+[WS]           ████████████████████████
+
+Phase 3: Core Staff (Sem 5-8)
+[STAFF]                    ████████████████████
+[ADMIN]                         ████████████████
+
+Phase 4: Finalisation (Sem 9-12)
+[STATS]                              ████████████
+[RAPPORTS]                               ████████████
+[TESTS]                                      ████████████
+[DEPLOY]                                          
+
+4. ADAPTATION BUDGETAIRE
+
+4.1 Budget 5 000 € (MVP allégé)
+
+| Module          | Fonctionnalités                         | Coût        |
+| --------------- | --------------------------------------- | ----------- |
+| **Auth**        | Login, Register, JWT basique            | 800 €       |
+| **Patient**     | Réservation simple, position temps réel | 1 500 €     |
+| **Staff**       | Dashboard, Appel patient basique        | 1 200 €     |
+| **Backend**     | API REST, WebSocket minimal             | 1 000 €     |
+| **Déploiement** | Docker, Documentation                   | 500 €       |
+| **Total**       |                                         | **5 000 €** |
+
+Retiré : Notifications push avancées, Statistiques détaillées, Export rapports, Multi-médecins
+
+4.2 Budget 10 000 € (Version standard)
+
+| Module              | Fonctionnalités                     | Coût         |
+| ------------------- | ----------------------------------- | ------------ |
+| **Auth complet**    | + Rôles, Reset password             | 1 200 €      |
+| **Patient complet** | + Choix médecin, Historique         | 2 500 €      |
+| **Staff complet**   | + Gestion file, Stats jour          | 2 000 €      |
+| **Admin**           | Gestion médecins, Rapports basiques | 1 500 €      |
+| **Temps réel**      | WebSocket, Notifications            | 1 500 €      |
+| **API & Tests**     | Documentation, Tests automatisés    | 1 000 €      |
+| **Déploiement**     | CI/CD, Monitoring                   | 300 €        |
+| **Total**           |                                     | **10 000 €** |
+
+4.3 Budget 20 000 € (Version premium)
+
+| Module                   | Fonctionnalités          | Coût         |
+| ------------------------ | ------------------------ | ------------ |
+| **Tous les modules 1-6** | Version complète         | 13 250 €     |
+| **Application mobile**   | React Native iOS/Android | 5 000 €      |
+| **Paiement en ligne**    | Intégration Stripe       | 1 500 €      |
+| **Support & Formation**  | 2 jours sur site         | 250 €        |
+| **Total**                |                          | **20 000 €** |
+
+
+4.4 Comparaison des offres
+
+| Critère             | 5K€ MVP        | 10K€ Standard  | 20K€ Premium    |
+| ------------------- | -------------- | -------------- | --------------- |
+| Délais              | 4 sem          | 10 sem         | 16 sem          |
+| Patients simultanés | 50             | 500            | Illimité        |
+| Médecins            | 3 max          | Illimité       | Multi-cliniques |
+| Mobile              | Web responsive | Web responsive | App native      |
+| Support             | Email 1 mois   | Email 6 mois   | 12 mois + Tél   |
+| Hébergement (an)    | 1 500 €        | 3 520 €        | 5 000 €         |
+
