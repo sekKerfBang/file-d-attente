@@ -30,7 +30,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*"]
+# ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*"]
+# ====================== ALLOWED HOSTS & CORS ======================
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS', 
+    'localhost,127.0.0.1,api.clinique.fr,clinique.fr,www.clinique.fr'
+).split(',')
+
+# Ajout automatique des domaines Render
+if not DEBUG:
+    ALLOWED_HOSTS.extend(['.onrender.com', '.render.com'])
 
 
 # Application definition
@@ -59,6 +68,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -100,36 +110,89 @@ ASGI_APPLICATION = 'config.asgi.application'
 #     }
 # }
 # Database
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'clinic'),
-        'USER': os.environ.get('DB_USER', 'clinic'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'clinic'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+
+# ====================== DATABASE CONFIG (DEV / PROD / DOCKER) ======================
+import dj_database_url   # ← AJOUTE CET IMPORT EN HAUT DU FICHIER (avec les autres imports)
+
+if os.getenv('DATABASE_URL'):
+    # === PRODUCTION (Render) ===
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,           # Garde la connexion ouverte
+            conn_health_checks=True,
+            ssl_require=not DEBUG,      # SSL uniquement en prod
+        )
     }
-}
+    print("✅ Base de données : MODE PRODUCTION (Render)")
+else:
+    # === DÉVELOPPEMENT + DOCKER-COMPOSE ===
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', 'clinic_db'),
+            'USER': os.environ.get('DB_USER', 'clinic_user'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'clinic'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '5432'),
+        }
+    }
+    print("✅ Base de données : MODE DÉVELOPPEMENT / Docker")
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('DB_NAME', 'clinic'),
+#         'USER': os.environ.get('DB_USER', 'clinic'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD', 'clinic'),
+#         'HOST': os.environ.get('DB_HOST', 'localhost'),
+#         'PORT': os.environ.get('DB_PORT', '5432'),
+#     }
+# }
 
 # Cache & Channels
+
+# ====================== CACHE & REDIS (Render Redis) ======================
+REDIS_URL = os.getenv('REDIS_URL') or f"redis://{os.environ.get('REDIS_HOST', 'localhost')}:{os.environ.get('REDIS_PORT', '6379')}/1"
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f"redis://{os.environ.get('REDIS_HOST', 'localhost')}:{os.environ.get('REDIS_PORT', '6379')}/1",
+        'LOCATION': REDIS_URL,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+        }
     }
 }
+
+# ====================== CHANNELS (WebSocket - IMPORTANT) ======================
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [REDIS_URL],
+        },
+    },
+}
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': f"redis://{os.environ.get('REDIS_HOST', 'redis')}:{os.environ.get('REDIS_PORT', '6379')}/1",
+#         'LOCATION': f"redis://{os.environ.get('REDIS_HOST', 'localhost')}:{os.environ.get('REDIS_PORT', '6379')}/1",
 #     }
 # }
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-    },
-}
+# # CACHES = {
+# #     'default': {
+# #         'BACKEND': 'django_redis.cache.RedisCache',
+# #         'LOCATION': f"redis://{os.environ.get('REDIS_HOST', 'redis')}:{os.environ.get('REDIS_PORT', '6379')}/1",
+# #     }
+# # }
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
+#     },
+# }
 
 # CHANNEL_LAYERS = {
 #     'default': {
@@ -183,12 +246,21 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CORS
-CORS_ALLOWED_ORIGINS = [
-   "http://localhost:5173",
-   "http://127.0.0.1:5173",
-    # Ajoutez votre IP locale si nécessaire
-    "http://192.168.1.100:5173",
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',') if os.getenv('CORS_ALLOWED_ORIGINS') else [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
+if not DEBUG:
+    CORS_ALLOWED_ORIGINS.extend([
+        "https://clinique.fr",
+        "https://www.clinique.fr",
+    ])
+# CORS_ALLOWED_ORIGINS = [
+#    "http://localhost:5173",
+#    "http://127.0.0.1:5173",
+#     # Ajoutez votre IP locale si nécessaire
+#     "http://192.168.1.100:5173",
+# ]
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_HEADERS = [
